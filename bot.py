@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import settings
+import sqlite3
 from ninja_kiwi_api import NinjaKiwiApi
 from database import Database
 
@@ -21,12 +22,15 @@ def main():
 
     @bot.command()
     async def register(ctx, oak):
-        db.add_user(str(ctx.author), oak)
-        await ctx.send(f"User '{str(ctx.author)}' successfully registered.")
+        try:
+            db.add_user(str(ctx.author), oak)
+            await ctx.send(f"User '{str(ctx.author)}' successfully registered.")
+        except sqlite3.IntegrityError:
+            await ctx.send("This user is already registered!")
 
 
     @bot.command()
-    async def get_monkey_money(ctx, username = None):
+    async def monkey_money(ctx, username = None):
         try:
             if username:
                 api = NinjaKiwiApi(db.retrieve_user_oak(username))
@@ -37,7 +41,149 @@ def main():
                 api.load_data()
                 await ctx.send(f"You have {api.monkey_money} Monkey Money!")
         except TypeError:
+            await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
+        except KeyError:
+            await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
+    
+    @bot.command()
+    async def current_hero(ctx, username = None):
+        try:
+            if username:
+                api = NinjaKiwiApi(db.retrieve_user_oak(username))
+                api.load_data()
+                await ctx.send(f"{username} is currently using {api.current_hero} as their hero!")
+            else:
+                api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
+                api.load_data()
+                await ctx.send(f"You currently have {api.current_hero} as your hero!")
+        except TypeError:
             await ctx.send("Data for this user cannot be retrieved.")
+        except KeyError:
+            await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
+    
+    @bot.command()
+    async def level(ctx, username = None):
+        try:
+            if username:
+                api = NinjaKiwiApi(db.retrieve_user_oak(username))
+                api.load_data()
+                await ctx.send(f"{username} is level {api.rank}.")
+            else:
+                api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
+                api.load_data()
+                await ctx.send(f"You are level {api.rank}.")
+        except TypeError:
+            await ctx.send("Data for this user cannot be retrieved.")
+        except KeyError:
+            await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
+    
+    @bot.command()
+    async def favorite_monkey(ctx, username = None):
+        try:
+            if username:
+                api = NinjaKiwiApi(db.retrieve_user_oak(username))
+                api.load_data()
+                await ctx.send(f"{username}'s favorite monkey is the {api.fav_monkey}!")
+            else:
+                api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
+                api.load_data()
+                await ctx.send(f"Your favorite monkey is the {api.fav_monkey}!")
+        except TypeError:
+            await ctx.send("Data for this user cannot be retrieved.")
+        except KeyError:
+            await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
+    
+    @bot.command()
+    async def favorite_hero(ctx, username = None):
+            try:
+                if username:
+                    api = NinjaKiwiApi(db.retrieve_user_oak(username))
+                    api.load_data()
+                    await ctx.send(f"{username}'s favorite hero is {api.fav_hero}!")
+                else:
+                    api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
+                    api.load_data()
+                    await ctx.send(f"Your favorite hero is {api.fav_hero}!")
+            except TypeError:
+                await ctx.send("Data for this user cannot be retrieved.")
+            except KeyError:
+                await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
+    
+    @bot.command()
+    async def bloons_popped(ctx, username = None):
+        try:
+            if username:
+                api = NinjaKiwiApi(db.retrieve_user_oak(username))
+                api.load_data()
+                await ctx.send(f"{username} has popped {api.bloons_popped} bloons!")
+            else:
+                api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
+                api.load_data()
+                await ctx.send(f"You have popped {api.bloons_popped} bloons!")
+        except TypeError:
+            await ctx.send("Data for this user cannot be retrieved.")
+        except KeyError:
+            await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
+    
+    @bot.command()
+    async def highest_round(ctx, username = None):
+        try:
+            if username:
+                api = NinjaKiwiApi(db.retrieve_user_oak(username))
+                api.load_data()
+                await ctx.send(f"{username}'s highest round is {api.highest_round}!")
+            else:
+                api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
+                api.load_data()
+                await ctx.send(f"Your highest round is {api.highest_round}!")
+        except TypeError:
+            await ctx.send("Data for this user cannot be retrieved.")
+        except KeyError:
+            await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
+    
+    @bot.command()
+    async def black_borders(ctx, username = None):
+        try:
+            if username:
+                api = NinjaKiwiApi(db.retrieve_user_oak(username))
+                api.load_data()
+                await ctx.send(f"{username} has {api.black_borders} black borders!")
+            else:
+                api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
+                api.load_data()
+                await ctx.send(f"You have {api.black_borders} black borders!")
+        except TypeError:
+            await ctx.send("Data for this user cannot be retrieved.")
+        except KeyError:
+            await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
+    
+    @bot.command()
+    async def stats(ctx, username = None):
+        try:
+            if username:
+                api = NinjaKiwiApi(db.retrieve_user_oak(username))
+                api.load_data()
+                await ctx.send(f"""{username}'s Stats:
+                               \nLevel: {api.rank}
+                               \nFavorite Monkey: {api.fav_monkey}
+                               \nFavorite Hero: {api.fav_hero}
+                               \nHighest Round: {api.highest_round}
+                               \nBloons Popped: {api.bloons_popped}
+                               \nBlack Borders: {api.black_borders}""")
+            else:
+                api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
+                api.load_data()
+                await ctx.send(f"""{str(ctx.author)}'s Stats:
+                               \nLevel: {api.rank}
+                               \nFavorite Monkey: {api.fav_monkey}
+                               \nFavorite Hero: {api.fav_hero}
+                               \nHighest Round: {api.highest_round}
+                               \nBloons Popped: {api.bloons_popped}
+                               \nBlack Borders: {api.black_borders}""")
+        except TypeError:
+            await ctx.send("Data for this user cannot be retrieved.")
+        except KeyError:
+            await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
     
     bot.run(settings.DISCORD_API_SECRET, root_logger=True)
 

@@ -51,6 +51,18 @@ class NinjaKiwiApi:
 
         return r_obj
     
+    def split_hero_name(self, name:str) -> str:
+        res = ''
+        for i in name:
+            if i.isupper():
+                res += "*" + i
+            else:
+                res += i
+        if res != name:
+            name = res.split("*")
+            name = ' '.join(name[1:])
+        return name
+    
 
     def load_data(self) -> None:
         url_userID = f"https://data.ninjakiwi.com/btd6/users/{self.OAK}"
@@ -66,7 +78,8 @@ class NinjaKiwiApi:
         self.followers = r_obj1["body"]["followers"]
         self.bloons_popped = r_obj1["body"]["bloonsPopped"]["bloonsPopped"]
         self.highest_round = r_obj1["body"]["gameplay"]["highestRound"]
-        self.fav_hero = [key for key in r_obj1["body"]["heroesPlaced"] if r_obj1["body"]["heroesPlaced"][key] == max(r_obj1["body"]["heroesPlaced"].values())]
+        fav_hero_name = [key for key in r_obj1["body"]["heroesPlaced"] if r_obj1["body"]["heroesPlaced"][key] == max(r_obj1["body"]["heroesPlaced"].values())]
+        self.fav_hero = self.split_hero_name(fav_hero_name[0])
         self.black_borders = r_obj1["body"]["_medalsSinglePlayer"]["CHIMPS-BLACK"]
 
         self.monkey_money = r_obj2["body"]["monkeyMoney"]
