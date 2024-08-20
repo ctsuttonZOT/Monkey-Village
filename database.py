@@ -17,8 +17,8 @@ class Database:
                 '''
                 CREATE TABLE users(
                     user_name TEXT PRIMARY KEY,
-                    user_oak TEXT
-                )
+                    user_oak TEXT UNIQUE
+                ) STRICT
                 ''')
             self.connection.commit()
     
