@@ -84,3 +84,12 @@ class NinjaKiwiApi:
 
         self.monkey_money = r_obj2["body"]["monkeyMoney"]
         self.current_hero = r_obj2["body"]["primaryHero"]
+    
+    def valid_oak_check(self) -> bool:
+        test_url = f"https://data.ninjakiwi.com/btd6/users/{self.OAK}"
+        r_obj = self._download_url(test_url)
+
+        # If error is null, oak is valid
+        if r_obj["error"]:
+            return False
+        return True

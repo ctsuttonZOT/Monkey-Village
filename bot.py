@@ -24,11 +24,15 @@ def main():
 
     @bot.command()
     async def register(ctx, oak):
-        try:
-            db.add_user(str(ctx.author), oak)
-            await ctx.send(f"User '{str(ctx.author)}' successfully registered.")
-        except sqlite3.IntegrityError:
-            await ctx.send("This user is already registered!")
+        api = NinjaKiwiApi(oak)
+        if not api.valid_oak_check():
+            await ctx.send("The OAK given is invalid.")
+        else:
+            try:
+                db.add_user(str(ctx.author), oak)
+                await ctx.send(f"User '{str(ctx.author)}' successfully registered.")
+            except sqlite3.IntegrityError:
+                await ctx.send("This user is already registered!")
     
     @bot.command()
     async def deregister(ctx):
