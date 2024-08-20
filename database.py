@@ -24,16 +24,26 @@ class Database:
     
     def add_user(self, username: str, user_oak: str) -> None:
         self.connection.execute(
-            f'''
+            '''
             INSERT INTO users (user_name, user_oak)
             VALUES (?, ?)
             ''',
             (username, user_oak))
         self.connection.commit()
     
+    def remove_user(self, username:str) -> None:
+        self.connection.execute(
+            '''
+            DELETE FROM users
+            WHERE user_name = ?
+            ''',
+            (username,)
+        )
+        self.connection.commit()
+    
     def retrieve_user_oak(self, username: str) -> str:
         oak = self.connection.execute(
-            f'''
+            '''
             SELECT user_oak
             FROM users
             WHERE user_name = ?

@@ -29,6 +29,11 @@ def main():
             await ctx.send(f"User '{str(ctx.author)}' successfully registered.")
         except sqlite3.IntegrityError:
             await ctx.send("This user is already registered!")
+    
+    @bot.command()
+    async def deregister(ctx):
+        db.remove_user(str(ctx.author))
+        await ctx.send(f"User '{str(ctx.author)}' deregistered.")
 
 
     @bot.command()
