@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 import settings
 import sqlite3
+import io
+import aiohttp
 from ninja_kiwi_api import NinjaKiwiApi
 from database import Database
 
@@ -157,6 +159,32 @@ def main():
         except KeyError:
             await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
     
+    @bot.command()
+    async def avatar(ctx, username = None):
+        try:
+            if username:
+                api = NinjaKiwiApi(db.retrieve_user_oak(username))
+                api.load_data()
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(api.avatar_url) as resp:
+                        if resp.status != 200:
+                            await ctx.send("Could not download file.")
+                        data = io.BytesIO(await resp.read())
+                        await ctx.send(f"{username}'s current avatar:", file=discord.File(data, 'user_avatar.png'))
+            else:
+                api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
+                api.load_data()
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(api.avatar_url) as resp:
+                        if resp.status != 200:
+                            await ctx.send("Could not download file.")
+                        data = io.BytesIO(await resp.read())
+                        await ctx.send("Your current avatar:", file=discord.File(data, 'user_avatar.png'))
+        except TypeError:
+            await ctx.send("Data for this user cannot be retrieved.")
+        except KeyError:
+            await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
+
     @bot.command()
     async def stats(ctx, username = None):
         try:
