@@ -126,11 +126,11 @@ def main():
             if username:
                 api = NinjaKiwiApi(db.retrieve_user_oak(username))
                 api.load_data()
-                await ctx.send(f"{username} has popped {api.bloons_popped} bloons!")
+                await ctx.send(f"{username} has popped {api.bloons_popped:,} bloons!")
             else:
                 api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
                 api.load_data()
-                await ctx.send(f"You have popped {api.bloons_popped} bloons!")
+                await ctx.send(f"You have popped {api.bloons_popped:,} bloons!")
         except TypeError:
             await ctx.send("Data for this user cannot be retrieved.")
         except KeyError:
@@ -200,23 +200,35 @@ def main():
             if username:
                 api = NinjaKiwiApi(db.retrieve_user_oak(username))
                 api.load_data()
-                await ctx.send(f"""{username}'s Stats:
+                embed = discord.Embed(
+                    color = discord.Colour.dark_embed(),
+                    title = f"{username}'s Stats:",
+                    description = f"""
                                \nLevel: {api.rank}
                                \nFavorite Monkey: {api.fav_monkey}
                                \nFavorite Hero: {api.fav_hero}
                                \nHighest Round: {api.highest_round}
-                               \nBloons Popped: {api.bloons_popped}
-                               \nBlack Borders: {api.black_borders}""")
+                               \nBloons Popped: {api.bloons_popped:,}
+                               \nBlack Borders: {api.black_borders}
+                                """)
+                embed.set_thumbnail(url=api.avatar_url)
+                await ctx.send(embed=embed)
             else:
                 api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
                 api.load_data()
-                await ctx.send(f"""{str(ctx.author)}'s Stats:
+                embed = discord.Embed(
+                    color = discord.Colour.dark_embed(),
+                    title = f"{ctx.author}'s Stats:",
+                    description = f"""
                                \nLevel: {api.rank}
                                \nFavorite Monkey: {api.fav_monkey}
                                \nFavorite Hero: {api.fav_hero}
                                \nHighest Round: {api.highest_round}
-                               \nBloons Popped: {api.bloons_popped}
-                               \nBlack Borders: {api.black_borders}""")
+                               \nBloons Popped: {api.bloons_popped:,}
+                               \nBlack Borders: {api.black_borders}
+                                """)
+                embed.set_thumbnail(url=api.avatar_url)
+                await ctx.send(embed=embed)
         except TypeError:
             await ctx.send("Data for this user cannot be retrieved.")
         except KeyError:

@@ -51,7 +51,7 @@ class NinjaKiwiApi:
 
         return r_obj
     
-    def split_hero_name(self, name:str) -> str:
+    def split_monkey_name(self, name:str) -> str:
         res = ''
         for i in name:
             if i.isupper():
@@ -73,17 +73,17 @@ class NinjaKiwiApi:
 
         self.name = r_obj1["body"]["displayName"]
         self.rank = r_obj1["body"]["rank"]
-        self.fav_monkey = r_obj1["body"]["mostExperiencedMonkey"]
+        self.fav_monkey = self.split_monkey_name(r_obj1["body"]["mostExperiencedMonkey"])
         self.avatar_url = r_obj1["body"]["avatarURL"]
         self.followers = r_obj1["body"]["followers"]
         self.bloons_popped = r_obj1["body"]["bloonsPopped"]["bloonsPopped"]
         self.highest_round = r_obj1["body"]["gameplay"]["highestRound"]
         fav_hero_name = [key for key in r_obj1["body"]["heroesPlaced"] if r_obj1["body"]["heroesPlaced"][key] == max(r_obj1["body"]["heroesPlaced"].values())]
-        self.fav_hero = self.split_hero_name(fav_hero_name[0])
+        self.fav_hero = self.split_monkey_name(fav_hero_name[0])
         self.black_borders = r_obj1["body"]["_medalsSinglePlayer"]["CHIMPS-BLACK"]
 
         self.monkey_money = r_obj2["body"]["monkeyMoney"]
-        self.current_hero = r_obj2["body"]["primaryHero"]
+        self.current_hero = self.split_monkey_name(r_obj2["body"]["primaryHero"])
     
     def valid_oak_check(self) -> bool:
         test_url = f"https://data.ninjakiwi.com/btd6/users/{self.OAK}"
