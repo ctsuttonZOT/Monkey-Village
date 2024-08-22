@@ -1,4 +1,5 @@
 import discord
+import asyncio
 from discord.ext import commands
 import settings
 import sqlite3
@@ -18,184 +19,211 @@ def main():
     @bot.event
     async def on_ready():
         logger.info(f"User: {bot.user} (ID: {bot.user.id})")
+        await bot.tree.sync()
+
         global db
         db = Database()
 
 
-    @bot.command()
-    async def register(ctx, oak):
+    @bot.hybrid_command()
+    async def register(ctx: commands.Context, oak: str):
         api = NinjaKiwiApi(oak)
         if not api.valid_oak_check():
             await ctx.send("The OAK given is invalid.")
         else:
             try:
                 db.add_user(str(ctx.author), oak)
-                await ctx.send(f"User '{str(ctx.author)}' successfully registered.")
+                await ctx.send(f"User {ctx.author.mention} successfully registered.", silent=True)
             except sqlite3.IntegrityError:
                 await ctx.send("This user is already registered!")
     
-    @bot.command()
-    async def deregister(ctx):
+    @bot.hybrid_command()
+    async def deregister(ctx: commands.Context):
         db.remove_user(str(ctx.author))
-        await ctx.send(f"User '{str(ctx.author)}' deregistered.")
+        await ctx.send(f"User {ctx.author.mention} deregistered.", silent=True)
 
 
-    @bot.command()
-    async def monkey_money(ctx, username = None):
+    @bot.hybrid_command()
+    async def monkey_money(ctx: commands.Context, username: str = None):
         try:
             if username:
                 api = NinjaKiwiApi(db.retrieve_user_oak(username))
                 api.load_data()
-                await ctx.send(f"{username} has {api.monkey_money} Monkey Money!")
+                user = discord.utils.get(ctx.guild.members, name = username)
+                await ctx.send(f"{user.mention} has {api.monkey_money} Monkey Money!", silent=True)
             else:
                 api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
                 api.load_data()
-                await ctx.send(f"You have {api.monkey_money} Monkey Money!")
+                await ctx.send(f"{ctx.author.mention} has {api.monkey_money} Monkey Money!", silent=True)
         except TypeError:
             await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
         except KeyError:
             await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
     
-    @bot.command()
-    async def current_hero(ctx, username = None):
+    @bot.hybrid_command()
+    async def current_hero(ctx: commands.Context, username: str = None):
         try:
             if username:
                 api = NinjaKiwiApi(db.retrieve_user_oak(username))
                 api.load_data()
-                await ctx.send(f"{username} is currently using {api.current_hero} as their hero!")
+                user = discord.utils.get(ctx.guild.members, name = username)
+                await ctx.defer()
+                await asyncio.sleep(4)
+                await ctx.send(f"{user.mention} is currently using {api.current_hero} as their hero!", silent=True)
             else:
                 api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
                 api.load_data()
-                await ctx.send(f"You currently have {api.current_hero} as your hero!")
-        except TypeError:
-            await ctx.send("Data for this user cannot be retrieved.")
-        except KeyError:
-            await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
-    
-    @bot.command()
-    async def level(ctx, username = None):
-        try:
-            if username:
-                api = NinjaKiwiApi(db.retrieve_user_oak(username))
-                api.load_data()
-                await ctx.send(f"{username} is level {api.rank}.")
-            else:
-                api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
-                api.load_data()
-                await ctx.send(f"You are level {api.rank}.")
+                await ctx.defer()
+                await asyncio.sleep(4)
+                await ctx.send(f"{ctx.author.mention} currently has {api.current_hero} as their hero!", silent=True)
         except TypeError:
             await ctx.send("Data for this user cannot be retrieved.")
         except KeyError:
             await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
     
-    @bot.command()
-    async def favorite_monkey(ctx, username = None):
+    @bot.hybrid_command()
+    async def level(ctx: commands.Context, username: str = None):
         try:
             if username:
                 api = NinjaKiwiApi(db.retrieve_user_oak(username))
                 api.load_data()
-                await ctx.send(f"{username}'s favorite monkey is the {api.fav_monkey}!")
+                user = discord.utils.get(ctx.guild.members, name = username)
+                await ctx.send(f"{user.mention} is level {api.rank}.", silent=True)
             else:
                 api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
                 api.load_data()
-                await ctx.send(f"Your favorite monkey is the {api.fav_monkey}!")
+                await ctx.send(f"{ctx.author.mention} is level {api.rank}.", silent=True)
         except TypeError:
             await ctx.send("Data for this user cannot be retrieved.")
         except KeyError:
             await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
     
-    @bot.command()
-    async def favorite_hero(ctx, username = None):
+    @bot.hybrid_command()
+    async def favorite_monkey(ctx: commands.Context, username: str = None):
+        try:
+            if username:
+                api = NinjaKiwiApi(db.retrieve_user_oak(username))
+                api.load_data()
+                user = discord.utils.get(ctx.guild.members, name = username)
+                await ctx.defer()
+                await asyncio.sleep(5)
+                await ctx.send(f"{user.mention}'s favorite monkey is the {api.fav_monkey}!", silent=True)
+            else:
+                api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
+                api.load_data()
+                await ctx.defer()
+                await asyncio.sleep(5)
+                await ctx.send(f"{ctx.author.mention}'s favorite monkey is the {api.fav_monkey}!", silent=True)
+        except TypeError:
+            await ctx.send("Data for this user cannot be retrieved.")
+        except KeyError:
+            await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
+    
+    @bot.hybrid_command()
+    async def favorite_hero(ctx: commands.Context, username: str = None):
             try:
                 if username:
                     api = NinjaKiwiApi(db.retrieve_user_oak(username))
                     api.load_data()
-                    await ctx.send(f"{username}'s favorite hero is {api.fav_hero}!")
+                    user = discord.utils.get(ctx.guild.members, name = username)
+                    await ctx.defer()
+                    await asyncio.sleep(5)
+                    await ctx.send(f"{user.mention}'s favorite hero is {api.fav_hero}!", silent=True)
                 else:
                     api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
                     api.load_data()
-                    await ctx.send(f"Your favorite hero is {api.fav_hero}!")
+                    await ctx.defer()
+                    await asyncio.sleep(5)
+                    await ctx.send(f"{ctx.author.mention}'s favorite hero is {api.fav_hero}!", silent=True)
             except TypeError:
                 await ctx.send("Data for this user cannot be retrieved.")
             except KeyError:
                 await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
     
-    @bot.command()
-    async def bloons_popped(ctx, username = None):
+    @bot.hybrid_command()
+    async def bloons_popped(ctx: commands.Context, username: str = None):
         try:
             if username:
                 api = NinjaKiwiApi(db.retrieve_user_oak(username))
                 api.load_data()
-                await ctx.send(f"{username} has popped {api.bloons_popped:,} bloons!")
+                user = discord.utils.get(ctx.guild.members, name = username)
+                await ctx.send(f"{user.mention} has popped {api.bloons_popped:,} bloons!", silent=True)
             else:
                 api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
                 api.load_data()
-                await ctx.send(f"You have popped {api.bloons_popped:,} bloons!")
+                await ctx.send(f"{ctx.author.mention} has popped {api.bloons_popped:,} bloons!", silent=True)
         except TypeError:
             await ctx.send("Data for this user cannot be retrieved.")
         except KeyError:
             await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
     
-    @bot.command()
-    async def highest_round(ctx, username = None):
+    @bot.hybrid_command()
+    async def highest_round(ctx: commands.Context, username: str = None):
         try:
             if username:
                 api = NinjaKiwiApi(db.retrieve_user_oak(username))
                 api.load_data()
-                await ctx.send(f"{username}'s highest round is {api.highest_round}!")
+                user = discord.utils.get(ctx.guild.members, name = username)
+                await ctx.send(f"{user.mention}'s highest round is {api.highest_round}!", silent=True)
             else:
                 api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
                 api.load_data()
-                await ctx.send(f"Your highest round is {api.highest_round}!")
+                await ctx.send(f"{ctx.author.mention}'s highest round is {api.highest_round}!", silent=True)
         except TypeError:
             await ctx.send("Data for this user cannot be retrieved.")
         except KeyError:
             await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
     
-    @bot.command()
-    async def black_borders(ctx, username = None):
+    @bot.hybrid_command()
+    async def black_borders(ctx: commands.Context, username: str = None):
         try:
             if username:
                 api = NinjaKiwiApi(db.retrieve_user_oak(username))
                 api.load_data()
-                await ctx.send(f"{username} has {api.black_borders} black borders!")
+                user = discord.utils.get(ctx.guild.members, name = username)
+                await ctx.send(f"{user.mention} has {api.black_borders} black borders!", silent=True)
             else:
                 api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
                 api.load_data()
-                await ctx.send(f"You have {api.black_borders} black borders!")
+                await ctx.send(f"{ctx.author.mention} has {api.black_borders} black borders!", silent=True)
         except TypeError:
             await ctx.send("Data for this user cannot be retrieved.")
         except KeyError:
             await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
     
-    @bot.command()
-    async def avatar(ctx, username = None):
+    @bot.hybrid_command()
+    async def avatar(ctx: commands.Context, username: str = None):
         try:
             if username:
                 api = NinjaKiwiApi(db.retrieve_user_oak(username))
+                api.load_data()
+                user = discord.utils.get(ctx.guild.members, name = username)
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(api.avatar_url) as resp:
+                        if resp.status != 200:
+                            await ctx.send("Could not download file.")
+                        data = io.BytesIO(await resp.read())
+                        await ctx.defer()
+                        await asyncio.sleep(4)
+                        await ctx.send(f"{user.mention}'s current avatar:", file=discord.File(data, 'user_avatar.png'), silent=True)
+            else:
+                api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
                 api.load_data()
                 async with aiohttp.ClientSession() as session:
                     async with session.get(api.avatar_url) as resp:
                         if resp.status != 200:
                             await ctx.send("Could not download file.")
                         data = io.BytesIO(await resp.read())
-                        await ctx.send(f"{username}'s current avatar:", file=discord.File(data, 'user_avatar.png'))
-            else:
-                api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
-                api.load_data()
-                async with aiohttp.ClientSession() as session:
-                    async with session.get(api.avatar_url) as resp:
-                        if resp.status != 200:
-                            await ctx.send("Could not download file.")
-                        data = io.BytesIO(await resp.read())
-                        await ctx.send("Your current avatar:", file=discord.File(data, 'user_avatar.png'))
+                        await ctx.defer()
+                        await asyncio.sleep(4)
+                        await ctx.send(f"{ctx.author.mention}'s current avatar:", file=discord.File(data, 'user_avatar.png'), silent=True)
         except TypeError:
             await ctx.send("Data for this user cannot be retrieved.")
         except KeyError:
             await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
 
-    @bot.command()
-    async def stats(ctx, username = None):
+    @bot.hybrid_command()
+    async def stats(ctx: commands.Context, username: str = None):
         try:
             if username:
                 api = NinjaKiwiApi(db.retrieve_user_oak(username))
@@ -212,6 +240,8 @@ def main():
                                \nBlack Borders: {api.black_borders}
                                 """)
                 embed.set_thumbnail(url=api.avatar_url)
+                await ctx.defer()
+                await asyncio.sleep(4)
                 await ctx.send(embed=embed)
             else:
                 api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
@@ -228,6 +258,8 @@ def main():
                                \nBlack Borders: {api.black_borders}
                                 """)
                 embed.set_thumbnail(url=api.avatar_url)
+                await ctx.defer()
+                await asyncio.sleep(4)
                 await ctx.send(embed=embed)
         except TypeError:
             await ctx.send("Data for this user cannot be retrieved.")
