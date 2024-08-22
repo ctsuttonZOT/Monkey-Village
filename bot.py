@@ -10,20 +10,17 @@ from database import Database
 
 logger = settings.logging.getLogger("bot")
 
-# Hardcoded now for testing, will be changed when bot is ready.
-CHANNEL_ID = 1232929274571526174
-
 def main():
     bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 
     @bot.event
     async def on_ready():
         logger.info(f"User: {bot.user} (ID: {bot.user.id})")
-        await bot.tree.sync()
 
         global db
         db = Database()
 
+        await bot.tree.sync()
 
     @bot.hybrid_command()
     async def register(ctx: commands.Context, oak: str):
