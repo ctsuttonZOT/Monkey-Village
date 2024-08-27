@@ -47,11 +47,13 @@ def main():
                 api = NinjaKiwiApi(db.retrieve_user_oak(username))
                 api.load_data()
                 user = discord.utils.get(ctx.guild.members, name = username)
-                await ctx.send(f"{user.mention} has {api.monkey_money} Monkey Money!")
+                await ctx.interaction.response.defer()
+                await ctx.interaction.followup.send(f"{user.mention} has {api.monkey_money} Monkey Money!")
             else:
                 api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
                 api.load_data()
-                await ctx.send(f"{ctx.author.mention} has {api.monkey_money} Monkey Money!")
+                await ctx.interaction.response.defer()
+                await ctx.interaction.followup.send(f"{ctx.author.mention} has {api.monkey_money} Monkey Money!")
         except TypeError:
             await ctx.send("Data for this user cannot be retrieved. Perhaps an invalid OAK was given.")
         except KeyError:
@@ -64,15 +66,13 @@ def main():
                 api = NinjaKiwiApi(db.retrieve_user_oak(username))
                 api.load_data()
                 user = discord.utils.get(ctx.guild.members, name = username)
-                await ctx.defer()
-                await asyncio.sleep(4)
-                await ctx.send(f"{user.mention} is currently using {api.current_hero} as their hero!")
+                await ctx.interaction.response.defer()
+                await ctx.interaction.followup.send(f"{user.mention} is currently using {api.current_hero} as their hero!")
             else:
                 api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
                 api.load_data()
-                await ctx.defer()
-                await asyncio.sleep(4)
-                await ctx.send(f"{ctx.author.mention} currently has {api.current_hero} as their hero!")
+                await ctx.interaction.response.defer()
+                await ctx.interaction.followup.send(f"{ctx.author.mention} currently has {api.current_hero} as their hero!")
         except TypeError:
             await ctx.send("Data for this user cannot be retrieved.")
         except KeyError:
@@ -85,11 +85,13 @@ def main():
                 api = NinjaKiwiApi(db.retrieve_user_oak(username))
                 api.load_data()
                 user = discord.utils.get(ctx.guild.members, name = username)
-                await ctx.send(f"{user.mention} is level {api.rank}.")
+                await ctx.interaction.response.defer()
+                await ctx.interaction.followup.send(f"{user.mention} is level {api.rank}.")
             else:
                 api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
                 api.load_data()
-                await ctx.send(f"{ctx.author.mention} is level {api.rank}.")
+                await ctx.interaction.response.defer()
+                await ctx.interaction.followup.send(f"{ctx.author.mention} is level {api.rank}.")
         except TypeError:
             await ctx.send("Data for this user cannot be retrieved.")
         except KeyError:
@@ -102,15 +104,13 @@ def main():
                 api = NinjaKiwiApi(db.retrieve_user_oak(username))
                 api.load_data()
                 user = discord.utils.get(ctx.guild.members, name = username)
-                await ctx.defer()
-                await asyncio.sleep(5)
-                await ctx.send(f"{user.mention}'s favorite monkey is the {api.fav_monkey}!")
+                await ctx.interaction.response.defer()
+                await ctx.interaction.followup.send(f"{user.mention}'s favorite monkey is the {api.fav_monkey}!")
             else:
                 api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
                 api.load_data()
-                await ctx.defer()
-                await asyncio.sleep(5)
-                await ctx.send(f"{ctx.author.mention}'s favorite monkey is the {api.fav_monkey}!")
+                await ctx.interaction.response.defer()
+                await ctx.interaction.followup.send(f"{ctx.author.mention}'s favorite monkey is the {api.fav_monkey}!")
         except TypeError:
             await ctx.send("Data for this user cannot be retrieved.")
         except KeyError:
@@ -123,15 +123,13 @@ def main():
                     api = NinjaKiwiApi(db.retrieve_user_oak(username))
                     api.load_data()
                     user = discord.utils.get(ctx.guild.members, name = username)
-                    await ctx.defer()
-                    await asyncio.sleep(5)
-                    await ctx.send(f"{user.mention}'s favorite hero is {api.fav_hero}!")
+                    await ctx.interaction.response.defer()
+                    await ctx.interaction.followup.send(f"{user.mention}'s favorite hero is {api.fav_hero}!")
                 else:
                     api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
                     api.load_data()
-                    await ctx.defer()
-                    await asyncio.sleep(5)
-                    await ctx.send(f"{ctx.author.mention}'s favorite hero is {api.fav_hero}!")
+                    await ctx.interaction.response.defer()
+                    await ctx.interaction.followup.send(f"{ctx.author.mention}'s favorite hero is {api.fav_hero}!")
             except TypeError:
                 await ctx.send("Data for this user cannot be retrieved.")
             except KeyError:
@@ -144,11 +142,13 @@ def main():
                 api = NinjaKiwiApi(db.retrieve_user_oak(username))
                 api.load_data()
                 user = discord.utils.get(ctx.guild.members, name = username)
-                await ctx.send(f"{user.mention} has popped {api.bloons_popped:,} bloons!")
+                await ctx.interaction.response.defer()
+                await ctx.interaction.followup.send(f"{user.mention} has popped {api.bloons_popped:,} bloons!")
             else:
                 api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
                 api.load_data()
-                await ctx.send(f"{ctx.author.mention} has popped {api.bloons_popped:,} bloons!")
+                await ctx.interaction.response.defer()
+                await ctx.interaction.followup.send(f"{ctx.author.mention} has popped {api.bloons_popped:,} bloons!")
         except TypeError:
             await ctx.send("Data for this user cannot be retrieved.")
         except KeyError:
@@ -161,11 +161,13 @@ def main():
                 api = NinjaKiwiApi(db.retrieve_user_oak(username))
                 api.load_data()
                 user = discord.utils.get(ctx.guild.members, name = username)
-                await ctx.send(f"{user.mention}'s highest round is {api.highest_round}!")
+                await ctx.interaction.response.defer()
+                await ctx.interaction.followup.send(f"{user.mention}'s highest round is {api.highest_round}!")
             else:
                 api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
                 api.load_data()
-                await ctx.send(f"{ctx.author.mention}'s highest round is {api.highest_round}!")
+                await ctx.interaction.response.defer()
+                await ctx.interaction.followup.send(f"{ctx.author.mention}'s highest round is {api.highest_round}!")
         except TypeError:
             await ctx.send("Data for this user cannot be retrieved.")
         except KeyError:
@@ -178,11 +180,13 @@ def main():
                 api = NinjaKiwiApi(db.retrieve_user_oak(username))
                 api.load_data()
                 user = discord.utils.get(ctx.guild.members, name = username)
-                await ctx.send(f"{user.mention} has {api.black_borders} black borders!")
+                await ctx.interaction.response.defer()
+                await ctx.interaction.followup.send(f"{user.mention} has {api.black_borders} black borders!")
             else:
                 api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
                 api.load_data()
-                await ctx.send(f"{ctx.author.mention} has {api.black_borders} black borders!")
+                await ctx.interaction.response.defer()
+                await ctx.interaction.followup.send(f"{ctx.author.mention} has {api.black_borders} black borders!")
         except TypeError:
             await ctx.send("Data for this user cannot be retrieved.")
         except KeyError:
@@ -200,9 +204,8 @@ def main():
                         if resp.status != 200:
                             await ctx.send("Could not download file.")
                         data = io.BytesIO(await resp.read())
-                        await ctx.defer()
-                        await asyncio.sleep(4)
-                        await ctx.send(f"{user.mention}'s current avatar:", file=discord.File(data, 'user_avatar.png'))
+                        await ctx.interaction.response.defer()
+                        await ctx.interaction.followup.send(f"{user.mention}'s current avatar:", file=discord.File(data, 'user_avatar.png'))
             else:
                 api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
                 api.load_data()
@@ -211,9 +214,8 @@ def main():
                         if resp.status != 200:
                             await ctx.send("Could not download file.")
                         data = io.BytesIO(await resp.read())
-                        await ctx.defer()
-                        await asyncio.sleep(4)
-                        await ctx.send(f"{ctx.author.mention}'s current avatar:", file=discord.File(data, 'user_avatar.png'))
+                        await ctx.interaction.response.defer()
+                        await ctx.interaction.followup.send(f"{ctx.author.mention}'s current avatar:", file=discord.File(data, 'user_avatar.png'))
         except TypeError:
             await ctx.send("Data for this user cannot be retrieved.")
         except KeyError:
@@ -237,9 +239,8 @@ def main():
                                \nBlack Borders: {api.black_borders}
                                 """)
                 embed.set_thumbnail(url=api.avatar_url)
-                await ctx.defer()
-                await asyncio.sleep(4)
-                await ctx.send(embed=embed)
+                await ctx.interaction.response.defer()
+                await ctx.interaction.followup.send(embed=embed)
             else:
                 api = NinjaKiwiApi(db.retrieve_user_oak(str(ctx.author)))
                 api.load_data()
@@ -255,9 +256,8 @@ def main():
                                \nBlack Borders: {api.black_borders}
                                 """)
                 embed.set_thumbnail(url=api.avatar_url)
-                await ctx.defer()
-                await asyncio.sleep(4)
-                await ctx.send(embed=embed)
+                await ctx.interaction.response.defer()
+                await ctx.interaction.followup.send(embed=embed)
         except TypeError:
             await ctx.send("Data for this user cannot be retrieved.")
         except KeyError:
