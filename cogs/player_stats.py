@@ -13,7 +13,7 @@ class PlayerStats(commands.Cog, name="Player Stats"):
 
     @commands.hybrid_command(brief="Displays a user's current monkey money.",
                         description="Displays the monkey money of the user who uses the command, or of the user whose username is given.")
-    async def monkey_money(self, ctx: commands.Context, username: str = None):
+    async def monkey_money(self, ctx: commands.Context, username: str = commands.parameter(default=None, description="Someone's Discord username.")):
         try:
             if username:
                 api = NinjaKiwiApi(DB.retrieve_user_oak(username))
@@ -33,7 +33,7 @@ class PlayerStats(commands.Cog, name="Player Stats"):
     
     @commands.hybrid_command(brief="Displays a user's currently selected hero.",
                         description="Displays the current hero of the user who uses the command, or of the user whose username is given.")
-    async def current_hero(self, ctx: commands.Context, username: str = None):
+    async def current_hero(self, ctx: commands.Context, username: str = commands.parameter(default=None, description="Someone's Discord username.")):
         try:
             if username:
                 api = NinjaKiwiApi(DB.retrieve_user_oak(username))
@@ -53,7 +53,7 @@ class PlayerStats(commands.Cog, name="Player Stats"):
     
     @commands.hybrid_command(brief="Displays a user's current level.",
                         description="Displays the current level of the user who uses the command, or of the user whose username is given.")
-    async def level(self, ctx: commands.Context, username: str = None):
+    async def level(self, ctx: commands.Context, username: str = commands.parameter(default=None, description="Someone's Discord username.")):
         try:
             if username:
                 api = NinjaKiwiApi(DB.retrieve_user_oak(username))
@@ -73,7 +73,7 @@ class PlayerStats(commands.Cog, name="Player Stats"):
     
     @commands.hybrid_command(brief="Displays a user's favorite tower.",
                         description="Shows the favorite tower of the user who uses the command, or of the person whose username is given.")
-    async def favorite_monkey(self, ctx: commands.Context, username: str = None):
+    async def favorite_monkey(self, ctx: commands.Context, username: str = commands.parameter(default=None, description="Someone's Discord username.")):
         try:
             if username:
                 api = NinjaKiwiApi(DB.retrieve_user_oak(username))
@@ -93,7 +93,7 @@ class PlayerStats(commands.Cog, name="Player Stats"):
     
     @commands.hybrid_command(brief="Displays a user's most used hero.",
                         description="Shows the favorite hero of the user who uses the command, or of the person whose username is given.")
-    async def favorite_hero(self, ctx: commands.Context, username: str = None):
+    async def favorite_hero(self, ctx: commands.Context, username: str = commands.parameter(default=None, description="Someone's Discord username.")):
             try:
                 if username:
                     api = NinjaKiwiApi(DB.retrieve_user_oak(username))
@@ -113,7 +113,7 @@ class PlayerStats(commands.Cog, name="Player Stats"):
     
     @commands.hybrid_command(brief="Displays a user's total number of bloons popped.",
                         description="Displays the pop count of the user who uses the command, or of the person whose username is given.")
-    async def bloons_popped(self, ctx: commands.Context, username: str = None):
+    async def bloons_popped(self, ctx: commands.Context, username: str = commands.parameter(default=None, description="Someone's Discord username.")):
         try:
             if username:
                 api = NinjaKiwiApi(DB.retrieve_user_oak(username))
@@ -133,7 +133,7 @@ class PlayerStats(commands.Cog, name="Player Stats"):
     
     @commands.hybrid_command(brief="Displays a user's highest seen round.",
                         description="Shows the highest round of the user who uses the command, or of the person whose username is given.")
-    async def highest_round(self, ctx: commands.Context, username: str = None):
+    async def highest_round(self, ctx: commands.Context, username: str = commands.parameter(default=None, description="Someone's Discord username.")):
         try:
             if username:
                 api = NinjaKiwiApi(DB.retrieve_user_oak(username))
@@ -153,7 +153,7 @@ class PlayerStats(commands.Cog, name="Player Stats"):
     
     @commands.hybrid_command(brief="Displays a user's total number of black borders.",
                         description="Shows the author's total number of black borders, or of the person whose username is given.")
-    async def black_borders(self, ctx: commands.Context, username: str = None):
+    async def black_borders(self, ctx: commands.Context, username: str = commands.parameter(default=None, description="Someone's Discord username.")):
         try:
             if username:
                 api = NinjaKiwiApi(DB.retrieve_user_oak(username))
@@ -173,7 +173,7 @@ class PlayerStats(commands.Cog, name="Player Stats"):
     
     @commands.hybrid_command(brief="Displays a user's currently equipped BTD6 avatar.",
                         description="Displays the avatar of the user who uses the command, or of the person whose username is given.")
-    async def avatar(self, ctx: commands.Context, username: str = None):
+    async def avatar(self, ctx: commands.Context, username: str = commands.parameter(default=None, description="Someone's Discord username.")):
         try:
             if username:
                 api = NinjaKiwiApi(DB.retrieve_user_oak(username))
@@ -203,7 +203,7 @@ class PlayerStats(commands.Cog, name="Player Stats"):
 
     @commands.hybrid_command(brief="Displays various stats of the user.",
                         description="Shows various stats of the user who uses the command, or of the person whose username is given.")
-    async def stats(self, ctx: commands.Context, username: str = None):
+    async def stats(self, ctx: commands.Context, username: str = commands.parameter(default=None, description="Someone's Discord username.")):
         try:
             if username:
                 api = NinjaKiwiApi(DB.retrieve_user_oak(username))

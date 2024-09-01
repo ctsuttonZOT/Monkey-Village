@@ -1,4 +1,3 @@
-import discord
 import sqlite3
 from discord.ext import commands
 from ninja_kiwi_api import NinjaKiwiApi
@@ -12,7 +11,7 @@ class Registration(commands.Cog, name="Registration"):
 
     @commands.hybrid_command(brief="Registers a user in the bot's database.",
                         description="Registers a user in the bot's database when a valid OAK is given.")
-    async def register(self, ctx: commands.Context, oak: str):
+    async def register(self, ctx: commands.Context, oak: str = commands.parameter(description="An Open Access Key for the Ninja Kiwi API.")):
         api = NinjaKiwiApi(oak)
         if not api.valid_oak_check():
             await ctx.send("The OAK given is invalid.")
