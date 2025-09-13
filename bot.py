@@ -13,11 +13,9 @@ def main():
 
         await bot.load_extension("cogs.registration")
         await bot.load_extension("cogs.player_stats")
-
         await bot.tree.sync()
 
     bot.run(settings.DISCORD_API_SECRET, root_logger=True)
-
 
 if __name__ == "__main__":
     main()

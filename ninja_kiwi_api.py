@@ -1,10 +1,7 @@
 import urllib
 import json
-from urllib import request, error
-
 
 class NinjaKiwiApi:
-
     def __init__(self, OAK):
         # OAK = Open Access Key, a token unique to a player.
         self.OAK = OAK
@@ -25,26 +22,21 @@ class NinjaKiwiApi:
         self.fav_hero = None
         self.black_borders = None
 
-
     def _download_url(self, url: str) -> dict:
         try:
             response = urllib.request.urlopen(url)
             json_results = response.read()
             r_obj = json.loads(json_results)
-
         except urllib.error.HTTPError as e:
             print('Failed to download contents of URL')
             print(f'Status code: {e}')
             raise e
-
         except ConnectionError:
             print("Local internet connection has been lost.")
             raise ConnectionError
-
         except json.JSONDecodeError:
             print("Invalid JSON formatting from the remote API.")
             raise json.JSONDecodeError
-
         finally:
             if response is not None:
                 response.close()
@@ -58,11 +50,12 @@ class NinjaKiwiApi:
                 res += "*" + i
             else:
                 res += i
+
         if res != name:
             name = res.split("*")
             name = ' '.join(name[1:])
+
         return name
-    
 
     def load_data(self) -> None:
         url_userID = f"https://data.ninjakiwi.com/btd6/users/{self.OAK}"
